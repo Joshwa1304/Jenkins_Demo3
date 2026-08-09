@@ -26,6 +26,12 @@ pipeline {
                 bat 'java Hello'
             }
         }
+
+        stage('Copy Artifact') {
+            steps {
+                bat 'copy Hello.jar C:\\DevOpsArtifacts\\Hello-Java\\Hello.jar /Y'
+            }
+        }
     }
 
     post {
