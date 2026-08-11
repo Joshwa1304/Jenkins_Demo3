@@ -17,13 +17,13 @@ pipeline {
 
         stage('Package') {
             steps {
-                bat 'jar cf Hello.jar Hello.class'
+                bat 'jar cfe Hello.jar Hello Hello.class'
             }
         }
 
         stage('Run') {
             steps {
-                bat 'java Hello'
+                bat 'java -jar Hello.jar'
             }
         }
 
