@@ -13,10 +13,11 @@ public class Hello {
             System.out.println("You are not eligible");
         }
 
-        int num = 5;
+        int num = 1;
 
-        while (num >= 5) {
+        while (num <= 5) {
             System.out.println("Today is Wednesday");
+            num++;
         }
     }
 }
