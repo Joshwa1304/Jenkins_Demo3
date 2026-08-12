@@ -15,8 +15,8 @@ public class Hello {
 
         int num = 5;
 
-        while(num >= 5){
-            System.out.println("Today is Wednesday")
+        while (num >= 5) {
+            System.out.println("Today is Wednesday");
         }
     }
 }
