@@ -12,5 +12,11 @@ public class Hello {
         else {
             System.out.println("You are not eligible");
         }
+
+        int num = 5;
+
+        while(num >= 5){
+            System.out.println("Today is Wednesday")
+        }
     }
 }
