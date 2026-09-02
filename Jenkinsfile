@@ -39,7 +39,7 @@ pipeline {
             steps {
                 step([
                     $class: 'UCDeployPublisher',
-                    siteName: 'local',
+                    siteName: 'DevOps-Deploy',
 
                     component: [
                         $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
