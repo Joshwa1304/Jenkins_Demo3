@@ -26,35 +26,38 @@ pipeline {
             }
         }
 
-        stage('Copy Artifact') {
-            steps {
-                bat '''
-                    if not exist "C:\\DevOpsArtifacts\\Hello-Java\\%BUILD_NUMBER%" mkdir "C:\\DevOpsArtifacts\\Hello-Java\\%BUILD_NUMBER%"
-                    copy "Hello.jar" "C:\\DevOpsArtifacts\\Hello-Java\\%BUILD_NUMBER%\\Hello.jar" /Y
-                '''
-            }
-        }
-
         stage('Publish to HCL Deploy') {
             steps {
                 step([
                     $class: 'UCDeployPublisher',
+
                     siteName: 'DevOps-Deploy',
 
                     component: [
                         $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
-                        componentName: 'Hello-Java-Component',
+
+                        componentName: 'Jenkins-Hello-Component',
+
+                        createComponent: [
+                            $class: 'com.urbancode.jenkins.plugins.ucdeploy.ComponentHelper$CreateComponentBlock',
+
+                            componentTemplate: '',
+
+                            componentApplication: 'Jenkins-Hello-Application'
+                        ],
 
                         delivery: [
-                            $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Pull',
+                            $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeliveryHelper$Push',
 
-                            pullProperties: "FileSystemImportProperties/name=${BUILD_NUMBER}\nFileSystemImportProperties/description=Published from Jenkins build ${BUILD_NUMBER}",
+                            pushVersion: "${BUILD_NUMBER}",
 
-                            pullSourceType: 'File System',
+                            baseDir: "${WORKSPACE}",
 
-                            pullSourceProperties: 'FileSystemComponentProperties/basePath=C:\\DevOpsArtifacts\\Hello-Java',
+                            fileIncludePatterns: 'Hello.jar',
 
-                            pullIncremental: false
+                            fileExcludePatterns: '',
+
+                            pushDescription: "Pushed from Jenkins build ${BUILD_NUMBER}"
                         ]
                     ]
                 ])
@@ -64,7 +67,15 @@ pipeline {
 
     post {
         success {
-            archiveArtifacts artifacts: 'Hello.jar', fingerprint: true
+            archiveArtifacts artifacts: 'Hello.jar',
+                             fingerprint: true
+
+            echo "Build ${BUILD_NUMBER} completed successfully."
+            echo "Version ${BUILD_NUMBER} published to HCL Deploy."
+        }
+
+        failure {
+            echo "Build ${BUILD_NUMBER} failed. Check Console Output."
         }
     }
 }
